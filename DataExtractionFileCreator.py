@@ -48,17 +48,18 @@ for filename in os.listdir('TempImages'):
     final_image_time = image_true_hours*60 + image_true_minutes + image_true_seconds/60 + image_true_milliseconds/60000
     'Add the final image time to the thermal image list'
     thermal_image_time_list.append(final_image_time)
-
+    os.replace(filename,str(final_image_time))
+    
 thermal_image_index = 0
 
 
 with open(date + '.csv', 'r') as gas_exchange_data, open('DataExtraction.csv','w') as outputfile:
     data = csv.reader(gas_exchange_data, delimiter = ',', quotechar = '\n')
-    #writer = csv.writer(outputfile , delimiter=',')
+    
     while True:
         ged_row = next(data)
         time_stamp=float(ged_row[time_stamp_column])
-        if time_stamp <= thermal_image_time_list[thermal_image_index] + 0.3 and time_stamp >= thermal_image_time_list[thermal_image_index] - 0.3:
+        if time_stamp <= thermal_image_time_list[thermal_image_index] + 0.1 and time_stamp >= thermal_image_time_list[thermal_image_index] - 0.1:
             
             lbt=float(ged_row[lower_before_thermo_column])
             lat=float(ged_row[lower_after_thermo_column])
@@ -69,15 +70,15 @@ with open(date + '.csv', 'r') as gas_exchange_data, open('DataExtraction.csv','w
         
             outputfile.write(str(time_stamp))
             outputfile.write(',')
-            outputfile.write('Kmatrixfile')
-            outputfile.write(',')
-            outputfile.write(str(lbt))
-            outputfile.write(',')
-            outputfile.write(str(lat))
+            outputfile.write('KMatrix_23C_oneamp')
             outputfile.write(',')
             outputfile.write(str(ubt))
             outputfile.write(',')
             outputfile.write(str(uat))
+            outputfile.write(',')
+            outputfile.write(str(lbt))
+            outputfile.write(',')
+            outputfile.write(str(lat))
             outputfile.write(',')
             outputfile.write(str(xout2))
             outputfile.write('\n')
@@ -85,5 +86,5 @@ with open(date + '.csv', 'r') as gas_exchange_data, open('DataExtraction.csv','w
             thermal_image_index+=1        
         
         
-        #writer.writerow([time_stamp,'Kmatrixfile',lbt,lat,ubt,uat,xout2])
+        
         
